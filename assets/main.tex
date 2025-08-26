@@ -1,0 +1,136 @@
+\documentclass[10pt]{article}
+\usepackage{xcolor}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{pagecolor}
+\usepackage{geometry}
+\usepackage[hidelinks]{hyperref}  % This disables red boxes and colors
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{sectsty}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{lipsum}
+
+% Define exact background color from your image
+\definecolor{exactbg}{RGB}{18,18,19}
+
+
+
+
+
+
+% Set up custom header with current section
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+% Custom title tracker instead of \leftmark
+\newcommand{\sectiontitle}{}
+\renewcommand{\sectionmark}[1]{\renewcommand{\sectiontitle}{#1}}
+
+\fancyhead[L]{\textbf{\MakeUppercase{\sectiontitle}}}
+\fancyfoot[C]{\thepage}
+
+
+% Optional: small caps for all section titles
+\allsectionsfont{\normalfont\scshape\bfseries}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\begin{document}
+
+% Set marginless layout for the title page
+\newgeometry{margin=0in}
+
+\begin{titlepage}
+\pagecolor{exactbg}
+\color{white}
+
+\centering
+\vspace*{3cm}
+{\Huge Vulnerability Test Report\par}
+\vspace{1cm}
+{\Large\par}
+\vspace{0.5cm}
+{\Huge \textbf{InLighn Tech}\par}
+{\Huge \textbf{Experience, Learn, Thrive}\par}
+
+\vfill
+\includegraphics[width=0.8\textwidth]{a.png}
+
+
+
+
+
+% Social Icons Row
+\begin{center}
+  \href{https://github.com/ADITYADAS1999}{
+    \includegraphics[width=1.4cm]{3291667.png}
+  } \hspace{0.5cm}
+  \href{https://twitter.com/ADITYA90546170}{
+    \includegraphics[width=1.4cm]{images.png}
+  } \hspace{0.5cm}
+  \href{https://www.linkedin.com/in/aditya-das-7b2276202}{
+    \includegraphics[width=1.4cm]{linkin.png}
+  } \hspace{0.5cm}
+  \href{mailto:adityamca123@gmail.com}{
+    \includegraphics[width=1.4cm]{mail.png}
+  }\hspace{0.5cm}
+  \href{mailto:your.email@example.com}{
+    \includegraphics[width=1.4cm]{yiutube.jpg}
+  }
+\end{center}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\thispagestyle{empty}
+\end{titlepage}
+
+% Restore normal margins after title page
+\restoregeometry
+\pagecolor{white}
+\color{black}
+
+\clearpage
+\pagestyle{empty} % Disable header/footer
+% Change the size of "Contents" title
+\renewcommand{\contentsname}{{\Huge Contents}}
+
+
+
+
+
+\newpage
+
+\begin{itemize}
+    \item \LARGE \textbf{{Test Report : -}}
+\end{itemize}
+
+
+
+
+
+
+
+\end{document}
