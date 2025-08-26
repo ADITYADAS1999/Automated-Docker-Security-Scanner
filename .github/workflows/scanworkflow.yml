@@ -1,4 +1,4 @@
-name: Docker Vulnerability Report
+name: Docker Vulnerability & Security Report
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  scan:
+  security_scan:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,34 +27,66 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y trivy
 
-      # 3. Run Docker Scan → JSON report
-      - name: Run Docker Scan
-        run: trivy image --ignore-unfixed --exit-code 0 --format json --output report.json my-custom-app:latest
+      # 3. Run Trivy Scan → JSON report
+      - name: Run Trivy Docker Scan
+        run: trivy image --ignore-unfixed --exit-code 0 --format json --output reports/trivy.json my-custom-app:latest
 
-      # 4. Set up Python
+      # 4. Install Docker Scout (Container security insights)
+      - name: Install Docker Scout
+        run: |
+          docker scout scout-sbom > /dev/null || true
+          docker scout analyze my-custom-app:latest --json > reports/docker_scout.json
+
+      # 5. Install Bandit (Python SAST for app source code)
+      - name: Install Bandit
+        run: pip install bandit
+
+      - name: Run Bandit Scan
+        run: bandit -r docker/app/ -f json -o reports/bandit.json
+
+      # 6. MITRE ATT&CK Simulation (Atomic Red Team)
+      - name: Run Atomic Red Team (MITRE ATT&CK)
+        run: |
+          sudo apt-get install -y powershell
+          git clone https://github.com/redcanaryco/atomic-red-team.git
+          # Example: simulate credential dumping (T1003)
+          pwsh -Command "Import-Module ./atomic-red-team/Invoke-AtomicRedTeam.psd1; Invoke-AtomicTest T1003 -ShowDetails | Out-File -FilePath reports/mitre_T1003.json"
+
+      # 7. Set up Python environment for PDF generation
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      # 5. Install Python dependencies
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install PyPDF2
+          pip install PyPDF2 reportlab matplotlib
 
-      # 6. Generate Charts (Optional)
+      # 8. Map NIST CSF categories (using JSON from Trivy/Bandit/ZAP/Scout)
+      - name: Map Results to NIST CSF
+        run: |
+          python scripts/mappings.py reports/ nist_report.json
+
+      # 9. Generate Charts (Optional)
       - name: Generate Charts
         run: python scripts/gen_charts.py
 
-      # 7. Generate PDF Report
+      # 10. Generate PDF Report
       - name: Generate PDF Report
         run: python scripts/generate_report.py
 
-      # 8. Upload Artifact
+      # 11. Upload PDF Report
       - name: Upload PDF Report
         uses: actions/upload-artifact@v4
         with:
           name: docker-vulnerability-report
           path: report.pdf
+
+      # 12. Upload JSON Reports (Optional)
+      - name: Upload JSON Scan Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: json-reports
+          path: reports/
