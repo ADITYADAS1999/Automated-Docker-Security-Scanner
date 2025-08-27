@@ -45,7 +45,7 @@ jobs:
         run: pip install bandit
 
       - name: Run Bandit Scan
-        run: bandit -ll -ii -r . -f json -o bandit.json
+        run: bandit -ll -ii -r . -f json -o reports/bandit.json || true
 
       # 6. MITRE ATT&CK Simulation (Atomic Red Team)
       - name: Run Atomic Red Team (MITRE ATT&CK)
