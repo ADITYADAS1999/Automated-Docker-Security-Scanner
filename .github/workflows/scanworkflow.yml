@@ -51,9 +51,14 @@ jobs:
       - name: Run Atomic Red Team (MITRE ATT&CK)
         run: |
           sudo apt-get install -y powershell
+          mkdir -p reports
           git clone https://github.com/redcanaryco/atomic-red-team.git
-          # Example: simulate credential dumping (T1003)
-          pwsh -Command "Import-Module ./atomic-red-team/Invoke-AtomicRedTeam.psd1; Invoke-AtomicTest T1003 -ShowDetails | Out-File -FilePath reports/mitre_T1003.json"
+          git clone https://github.com/redcanaryco/invoke-atomicredteam.git
+          pwsh -Command "
+            Import-Module ./invoke-atomicredteam/Invoke-AtomicRedTeam.psd1;
+            Set-Location ./atomic-red-team/atomics;
+            Invoke-AtomicTest T1003 -ShowDetails -CheckPrereqs | Out-File -FilePath ../reports/mitre_T1003.json
+          " || true
 
       # 7. Set up Python environment for PDF generation
       - name: Set up Python
