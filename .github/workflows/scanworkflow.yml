@@ -49,17 +49,33 @@ jobs:
 
       # 6. MITRE ATT&CK Simulation (Atomic Red Team)
       - name: Run Atomic Red Team (MITRE ATT&CK)
+        shell: pwsh
         run: |
-          sudo apt-get install -y powershell
           mkdir -p reports
-          git clone https://github.com/redcanaryco/atomic-red-team.git
-          git clone https://github.com/redcanaryco/invoke-atomicredteam.git
-          pwsh -Command "
-            Install-Module powershell-yaml -Force -Scope CurrentUser;
-            Import-Module ./invoke-atomicredteam/Invoke-AtomicRedTeam.psd1 -Force;
-            Set-Location ./atomic-red-team/atomics;
-            Invoke-AtomicTest T1003 -ShowDetails -CheckPrereqs | Out-File -FilePath '${{ github.workspace }}/reports/mitre_T1003.json'
-          " || true
+          git clone https://github.com/redcanaryco/atomic-red-team.git $env:GITHUB_WORKSPACE/atomic-red-team
+          git clone https://github.com/redcanaryco/invoke-atomicredteam.git $env:GITHUB_WORKSPACE/invoke-atomicredteam
+          Import-Module $env:GITHUB_WORKSPACE/invoke-atomicredteam/Invoke-AtomicRedTeam.psd1 -Force
+          Invoke-AtomicTest T1003 -PathToAtomicsFolder "$env:GITHUB_WORKSPACE/atomic-red-team/atomics" `
+          -ShowDetails -CheckPrereqs | Out-File -FilePath "$env:GITHUB_WORKSPACE/reports/mitre_T1003.json" -Encoding utf8
+
+          
+
+
+
+
+      
+      #- name: Run Atomic Red Team (MITRE ATT&CK)
+        #run: |
+          #sudo apt-get install -y powershell
+          #mkdir -p reports
+          #git clone https://github.com/redcanaryco/atomic-red-team.git
+          #git clone https://github.com/redcanaryco/invoke-atomicredteam.git
+          #pwsh -Command "
+            #Install-Module powershell-yaml -Force -Scope CurrentUser;
+            #Import-Module ./invoke-atomicredteam/Invoke-AtomicRedTeam.psd1 -Force;
+            #Set-Location ./atomic-red-team/atomics;
+            #Invoke-AtomicTest T1003 -ShowDetails -CheckPrereqs | Out-File -FilePath '${{ github.workspace }}/reports/mitre_T1003.json'
+          #" || true
           
 
       # 7. Set up Python environment for PDF generation
