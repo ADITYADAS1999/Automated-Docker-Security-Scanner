@@ -58,7 +58,7 @@ jobs:
             Install-Module powershell-yaml -Force -Scope CurrentUser;
             Import-Module ./invoke-atomicredteam/Invoke-AtomicRedTeam.psd1 -Force;
             Set-Location ./atomic-red-team/atomics;
-            Invoke-AtomicTest T1003 -ShowDetails -CheckPrereqs | Out-File -FilePath $env:GITHUB_WORKSPACE/reports/mitre_T1003.json
+            Invoke-AtomicTest T1003 -ShowDetails -CheckPrereqs | Out-File -FilePath '$env:GITHUB_WORKSPACE/reports/mitre_T1003.json'
           " || true
           
 
