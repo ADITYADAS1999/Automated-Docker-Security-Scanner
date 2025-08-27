@@ -54,9 +54,22 @@ jobs:
           mkdir -p reports
           git clone https://github.com/redcanaryco/atomic-red-team.git $env:GITHUB_WORKSPACE/atomic-red-team
           git clone https://github.com/redcanaryco/invoke-atomicredteam.git $env:GITHUB_WORKSPACE/invoke-atomicredteam
+
+
+          # install required module
+          Install-Module powershell-yaml -Force -Scope CurrentUser -AllowClobber
+
           Import-Module $env:GITHUB_WORKSPACE/invoke-atomicredteam/Invoke-AtomicRedTeam.psd1 -Force
           Invoke-AtomicTest T1003 -PathToAtomicsFolder "$env:GITHUB_WORKSPACE/atomic-red-team/atomics" `
-          -ShowDetails -CheckPrereqs | Out-File -FilePath "$env:GITHUB_WORKSPACE/reports/mitre_T1003.json" -Encoding utf8
+            -ShowDetails -CheckPrereqs | Out-File -FilePath "$env:GITHUB_WORKSPACE/reports/mitre_T1003.json" -Encoding utf8
+
+          
+
+
+          
+        #Import-Module $env:GITHUB_WORKSPACE/invoke-atomicredteam/Invoke-AtomicRedTeam.psd1 -Force
+        #Invoke-AtomicTest T1003 -PathToAtomicsFolder "$env:GITHUB_WORKSPACE/atomic-red-team/atomics" `
+        #-ShowDetails -CheckPrereqs | Out-File -FilePath "$env:GITHUB_WORKSPACE/reports/mitre_T1003.json" -Encoding utf8
 
           
 
