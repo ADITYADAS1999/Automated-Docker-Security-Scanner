@@ -55,10 +55,12 @@ jobs:
           git clone https://github.com/redcanaryco/atomic-red-team.git
           git clone https://github.com/redcanaryco/invoke-atomicredteam.git
           pwsh -Command "
-            Import-Module ./invoke-atomicredteam/Invoke-AtomicRedTeam.psd1;
+            Install-Module powershell-yaml -Force -Scope CurrentUser;
+            Import-Module ./invoke-atomicredteam/Invoke-AtomicRedTeam.psd1 -Force;
             Set-Location ./atomic-red-team/atomics;
             Invoke-AtomicTest T1003 -ShowDetails -CheckPrereqs | Out-File -FilePath ../reports/mitre_T1003.json
           " || true
+          
 
       # 7. Set up Python environment for PDF generation
       - name: Set up Python
